@@ -63,7 +63,7 @@
         <p class="text-sm md:text-base"><strong>Date Re-homed:</strong> {{ pet.dateReHommed }}</p>
         <p class="text-sm md:text-base"><strong>Pet Type:</strong> Dog</p>
         <p class="text-sm md:text-base"><strong>Breed/Mix:</strong> {{ pet.breed }}</p>
-        <p class="text-sm md:text-base"><strong>Coat/Fur:</strong> Short</p>
+        <p class="text-sm md:text-base"><strong>Coat/Fur:</strong> {{ pet.coat }}</p> 
       </div>
     </div>
 
@@ -87,147 +87,15 @@
     </div>
 
     <!-- Editing Mode Modal -->
-    <div v-if="isEditing" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div class="bg-white max-w-[50rem] pb-10 pl-6 pr-6 first-line:w-full border-spacing-2 rounded-md h-[90vh]">
-        <h3 class="text-lg font-bold  text-center  p-5">Edit Pet Info</h3>
-      <div class="bg-white p-1 rounded-lg max-w-lg w-full h-[75vh] overflow-y-auto hide-scrollbar relative">
-        <!-- Image Carousel (Visible only in Step 1) -->
-        <div v-if="currentStep === 1" class="relative mb-4">
-          <img :src="pet.imageGallery[currentImageIndex]" alt="Pet Image" class="w-full h-64 object-cover rounded-lg" />
-          <button @click="prevImage" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-40 w-fit rounded-full flex items-center hover:bg-gray-100 hover:bg-opacity-50 text-gray-700 sm:hover:text-white  p-2">❮</button>
-          <button @click="nextImage" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-40 w-fit rounded-full flex items-center hover:bg-gray-100 hover:bg-opacity-50 text-gray-700 sm:hover:text-white  p-2">❯</button>
-          <button @click="deleteImage(currentImageIndex)" class="absolute top-1 right-1 bg-red-500 text-white rounded-[50%]  w-5 h-5  opacity-50 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-[8px]">✖</button>
-          
-          <!-- Add Photo Button -->
-          <button @click="triggerFileInput" class=" text-[10px] absolute bottom-2 left-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded">
-            Add a Photo
-          </button>
-          <input type="file" ref="fileInput" @change="onFileChange" accept="image/*" multiple class="hidden" />
-        </div>
+    <PetProfileModal 
+      :isVisible="isEditing" 
+      :isEditing="isEditing" 
+      :pet="pet" 
+      @close="closeModal" 
+      @submit="saveChanges"
+    />
 
-        <!-- Step 1: Pet Details Form -->
-        <div v-if="currentStep === 1" class="mb-4">
-          <label class="font-semibold">Name</label>
-          <input v-model="pet.name" type="text" class="border bold p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Nickname</label>
-          <input v-model="pet.nickname" type="text" class="border p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Date Re-homed</label>
-          <input v-model="pet.dateReHommed" type="date" class="border p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Pet Type</label>
-          <select v-model="pet.type" class="border p-2 rounded w-full mb-2">
-            <option value="Cat">Cat</option>
-            <option value="Dog">Dog</option>
-            <option value="Dog">Others</option>
-            <!-- Add more pet types as needed -->
-          </select>
-          
-          <label class="font-semibold">Breed / Mix</label>
-          <input v-model="pet.breed" type="text" class="border p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Gender</label>
-          <select v-model="pet.gender" class="border p-2 rounded w-full mb-2">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-          
-          <label class="font-semibold">Coat / Fur</label>
-          <input v-model="pet.coat" type="text" class="border p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Age</label>
-          <input v-model="pet.age" type="number" class="border p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Size & Weight</label>
-          <input v-model="pet.sizeWeight" type="text" class="border p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Energy Level</label>
-          <select v-model="pet.energyLevel" class="border p-2 rounded w-full mb-2">
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-          </select>
-          <div class="flex justify-between mt-4">
-          <button @click="closeModal" class="bg-gray-300 text-gray-800 rounded px-4 py-2">
-          Cancel
-        </button>
-            <button @click="nextStep" class="bg-blue-500 text-white rounded px-4 py-2">Next</button>
-        </div>
-        </div>
-        
-        <!-- Step 2: Health and Medical Form -->
-        <div v-if="currentStep === 2" class="mb-4">
-          <label class="font-semibold " >Vaccination Status</label>
-          <div class=" space-x-3 pb-4 ">
-            <label >
-              <input type="checkbox" v-model="pet.vaccinations.rabies" /> Rabies
-            </label>
-            <label >
-              <input type="checkbox" v-model="pet.vaccinations.fvr" /> Feline Viral Rhinotracheitis (Fvr)
-            </label>
-            <label >
-              <input  type="checkbox" v-model="pet.vaccinations.fcv" /> Feline Calicivirus (Fcv)
-            </label>
-            <label >
-              <input type="checkbox" v-model="pet.vaccinations.fp" /> Feline Panleukopenia (Fpv)
-            </label>
-          </div>
-
-
-      
-          <label class="font-semibold pt-3">Medical Conditions</label>
-          <input v-model="pet.medicalConditions" type="text" class="border p-2 rounded w-full mb-2" />
-          
-          <label class="font-semibold">Special Needs</label>
-          <input v-model="pet.specialNeeds" type="text" class="border p-2 rounded w-full mb-2" />
-          
-          <div class=" pt-5 space-y-2 ">
-          <label class="font-semibold">Has this animal been sterilized?</label>
-            <div class=" flex-row space-x-2">
-            <strong >Non-surgical:</strong>
-            <label >
-              <input type="radio" v-model="pet.sterilization" value="Chemical Sterilization" /> Chemical Sterilization
-            </label>
-            <label >
-              <input type="radio" v-model="pet.sterilization" value="Vasectomy" /> Vasectomy
-            </label>
-          </div>
-          <div class="flex-row space-x-2">
-            <strong class="font-semibold">Surgical:</strong>
-            <label >
-              <input type="radio" v-model="pet.sterilization" value="Neuter" /> Neuter
-            </label>
-          </div>
-            <div class=" flex-row space-x-3">
-            <strong class="font-semibold">Others:</strong>
-            <label >
-              <input type="radio" v-model="pet.sterilization" value="Intact" /> Intact
-            </label>
-            <label >
-              <input type="radio" v-model="pet.sterilization" value="Not Applicable" /> Not Applicable
-            </label>
-            <label >
-              <input type="radio" v-model="pet.sterilization" value="Unknown" /> Unknown
-            </label>
-          </div> 
-          <div class="pt-3">
-          <label class="font-semibold">Other Information</label>
-          <textarea v-model="pet.otherInfo" class="border p-2 rounded w-full mb-2" rows="4" placeholder="Tell me more about this Furry Animal"></textarea>
-          </div> 
-          </div>
-
-
-        <div class="flex justify-between mt-4">
-            <button @click="prevStep" class="bg-gray-300 text-gray-800 rounded px-4 py-2">Back</button>
-            <button @click="submitChanges" class="bg-blue-500 text-white rounded px-4 py-2">Save Changes</button>
-          </div>
-        </div>
-      </div>
-    </div> 
-  </div>
-  
-  <!-- Image Preview Modal -->
+    <!-- Image Preview Modal -->
     <div v-if="isPreviewing" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div class="p-6 rounded-lg max-w-lg w-full">
         <button @click="closePreview" class="font-bold absolute top-2 right-2 text-gray-600 hover:text-gray-900 p-4 text-4xl">
@@ -267,17 +135,22 @@
 </template>
 
 <script>
+import PetProfileModal from '@/pages/Modal/PetProfileModal.vue';
+
 export default {
   name: 'PetProfilePage',
+  components: {
+    PetProfileModal,
+  },
   data() {
     return {
-      isEditing: false, // Track if in edit mode
+      isEditing: false,
       currentImageIndex: 0,
-      currentStep: 1, // Track the current step
+      currentStep: 1,
       pet: {
         name: '',
         description: "Hi there, I'm Dolens! A mature and loyal mixed-breed dog...",
-        imageMain: '', // Main image for the pet
+        imageMain: '',
         imageGallery: [
         require('@/assets/image/LUIGI-3-300x300.jpg'),
         require('@/assets/image/LUIGI-3-300x300.jpg'),
@@ -308,7 +181,7 @@ export default {
         sterilization: '',
         otherInfo: '',
       },
-      showModal: false, // Track if the modal is visible
+      showModal: false,
       payment: {
         name: '',
         expiryMonth: '',
@@ -321,21 +194,16 @@ export default {
         state: '',
         country: 'Estonia',
       },
-      isPreviewing: false, // Track if the preview modal is visible
+      isPreviewing: false,
     };
   },
   methods: {
     toggleEdit() {
       this.isEditing = !this.isEditing;
-      if (this.isEditing) {
-        document.body.classList.add('overflow-hidden'); // Disable body scroll
-      } else {
-        document.body.classList.remove('overflow-hidden'); // Enable body scroll
-      }
     },
-    saveChanges() {
+    saveChanges(petData) {
+      this.pet = { ...petData };
       this.isEditing = false;
-      // Logic to save changes, e.g., update API or local state
     },
     onFileChange(event) {
       const files = event.target.files;
@@ -343,78 +211,75 @@ export default {
         Array.from(files).forEach(file => {
           const reader = new FileReader();
           reader.onload = (e) => {
-            this.pet.imageGallery.push(e.target.result); // Add the uploaded image to the image gallery
+            this.pet.imageGallery.push(e.target.result);
           };
           reader.readAsDataURL(file);
         });
       }
     },
     confirmDelete() {
-      this.showModal = true; // Show the confirmation modal
+      this.showModal = true;
     },
     deletePet() {
-      // Logic to delete the pet, e.g., API call
-      this.showModal = false; // Hide the modal after deletion
+      this.showModal = false;
     },
     nextImage() {
       if (this.currentImageIndex < this.pet.imageGallery.length - 1) {
         this.currentImageIndex++;
       } else {
-        this.currentImageIndex = 0; // Loop back to the first image
+        this.currentImageIndex = 0;
       }
     },
     prevImage() {
       if (this.currentImageIndex > 0) {
         this.currentImageIndex--;
       } else {
-        this.currentImageIndex = this.pet.imageGallery.length - 1; // Loop back to the last image
+        this.currentImageIndex = this.pet.imageGallery.length - 1;
       }
     },
     goToStep(step) {
-      this.currentStep = step; // Change the current step
+      this.currentStep = step;
       if (step === 1) {
-        document.body.classList.remove('overflow-hidden'); // Enable body scroll
+        document.body.classList.remove('overflow-hidden');
       } else {
-        document.body.classList.add('overflow-hidden'); // Disable body scroll
+        document.body.classList.add('overflow-hidden');
       }
     },
     closeModal() {
-      this.isEditing = false; // Close the modal
-      document.body.classList.remove('overflow-hidden'); // Enable body scroll when modal is closed
+      this.isEditing = false;
     },
     openPreview(index) {
-      console.log("Opening preview for image index:", index); // Debugging log
-      this.currentImageIndex = index; // Set the current image index
-      this.isPreviewing = true; // Show the preview modal
+      console.log("Opening preview for image index:", index);
+      this.currentImageIndex = index;
+      this.isPreviewing = true;
     },
     closePreview() {
-      this.isPreviewing = false; // Hide the preview modal
+      this.isPreviewing = false;
     },
     deleteImage(index) {
-      this.pet.imageGallery.splice(index, 1); // Remove the image at the specified index
+      this.pet.imageGallery.splice(index, 1);
       if (this.currentImageIndex >= this.pet.imageGallery.length) {
-        this.currentImageIndex = this.pet.imageGallery.length - 1; // Adjust current index if needed
+        this.currentImageIndex = this.pet.imageGallery.length - 1;
       }
     },
     triggerFileInput() {
-      this.$refs.fileInput.click(); // Use this.$refs to access the file input
+      this.$refs.fileInput.click();
     },
     nextStep() {
-      this.currentStep = 2; // Move to step 2
+      this.currentStep = 2;
     },
     prevStep() {
       if (this.currentStep > 1) {
-        this.currentStep--; // Move to the previous step
+        this.currentStep--;
       }
     },
-    
   },
   watch: {
     isEditing(newValue) {
       if (newValue) {
-        document.body.classList.add('overflow-hidden'); // Disable body scroll when modal is opened
+        document.body.classList.add('overflow-hidden');
       } else {
-        document.body.classList.remove('overflow-hidden'); // Enable body scroll when modal is closed
+        document.body.classList.remove('overflow-hidden');
       }
     },
   },
@@ -425,22 +290,22 @@ export default {
 @media (max-width: 292px) {
   /* Mobile styles */
   .doles {
-    flex-direction: column; /* Stack buttons vertically */
+    flex-direction: column;
   }
   .grid-cols-2 {
-    grid-template-columns: 1fr; /* Single column on mobile */
+    grid-template-columns: 1fr;
   }
   .h-40 {
-    height: auto; /* Adjust height for smaller screens */
+    height: auto;
   }
 }
 
 .hide-scrollbar {
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+  display: none;
 }
 </style>

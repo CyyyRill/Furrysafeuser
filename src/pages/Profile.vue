@@ -70,189 +70,14 @@
         <div v-if="selectedTab === 'dog'">
           <h2 class="text-2xl font-bold mb-4">Dog Profiles</h2>
           <button @click="showModal = true" class="mb-4 px-4 py-2 bg-blue-950 text-white rounded-lg">Create Pet Profile</button>
-          
-          <!-- Modal -->
-          <div v-if="showModal" class="popup fixed inset-0 flex items-center justify-center bg-black bg-opacity-">
-            <div class="bg-white max-w-[50rem] pb-10 pl-6 pr-6 first-line:w-full border-spacing-2 rounded-md h-[90vh]">
-            <h2 class="text-lg font-bold  text-center  p-5 ">Pet Details</h2>
-            <div class="popup-content bg-white p-6 rounded-lg" style="max-width: 800px; width: 100%; height: 75vh; overflow-y: auto;">
-       
 
-              <!-- Step 1: Upload Photo and Pet Details -->
-              <div v-if="currentStep === 1">
-                <h2 class="text-xl font-semibold mb-4">Upload Photo</h2>
-                <div
-                  class="border-2 border-dashed rounded-lg p-8 text-center transition-colors"
-                  :class="dragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300'"
-                  @drop="handleDrop"
-                  @dragover="handleDragOver"
-                  @dragleave="handleDragLeave"
-                >
-                  <div v-if="selectedFiles.length === 0">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <p class="mt-1 text-sm text-gray-600">Upload photos and videos here</p>
-                  </div>
-                  <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                    <div v-for="(file, index) in selectedFiles" :key="index" class="relative">
-                      <img :src="file.preview" alt="Preview" class="w-full h-32 object-cover rounded-lg" />
-                      <button
-                        @click="removeFile(index)"
-                        class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                      >
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    class="hidden"
-                    ref="fileInput"
-                    @change="handleFileSelect"
-                  />
-                  <button
-                    @click="$refs.fileInput.click()"
-                    class="mt-4 px-4 py-2 focus:ring-offset-2"
-                  >
-                    Select From Computer
-                  </button>
-                </div>
-
-                <!-- Pet Details Section -->
-                      
-                <label class=" font-semibold">Name</label>
-                <input v-model="pet.name" type="text" class="border bold p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Nickname</label>
-                <input v-model="pet.nickname" type="text" class="border p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Date Re-homed</label>
-                <input v-model="pet.dateReHommed" type="date" class="border p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Pet Type</label>
-                <select v-model="pet.type" class="border p-2 rounded w-full mb-2">
-                  <option value="Cat">Cat</option>
-                  <option value="Dog">Dog</option>
-                  <option value="Dog">Others</option>
-                  <!-- Add more pet types as needed -->
-                </select>
-          
-                      <label class="font-semibold">Breed / Mix</label>
-                <input v-model="pet.breed" type="text" class="border p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Gender</label>
-                <select v-model="pet.gender" class="border p-2 rounded w-full mb-2">
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-                
-                <label class="font-semibold">Coat / Fur</label>
-                <input v-model="pet.coat" type="text" class="border p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Age</label>
-                <input v-model="pet.age" type="number" class="border p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Size & Weight</label>
-                <input v-model="pet.sizeWeight" type="text" class="border p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Energy Level</label>
-                <select v-model="pet.energyLevel" class="border p-2 rounded w-full mb-2">
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </select>
-                
-                <label class="font-semibold">Status</label>
-                <select v-model="pet.status" class="border p-2 rounded w-full mb-2">
-                  <option value="Adopted">Adopted</option>
-                  <option value="Available">Available</option>
-                  <!-- Add more statuses as needed -->
-                </select> 
-
-                    <div class="flex justify-between mt-4">
-                  <button @click="showModal = false" class="bg-gray-300 text-gray-800 rounded px-4 py-2">
-                  Cancel
-                </button>
-                    <button @click="goToStep(2)" class="bg-blue-500 text-white rounded px-4 py-2">Next</button>
-                </div>
-              </div>
-              
-
-              <!-- Step 2: Additional Information or Confirmation -->
-              <div v-if="currentStep === 2">
-                <label class="font-semibold " >Vaccination Status</label>
-                <div class=" space-x-3 pb-4 ">
-                  <label >
-                    <input type="checkbox" v-model="pet.vaccinations.rabies" /> Rabies
-                  </label>
-                  <label >
-                    <input type="checkbox" v-model="pet.vaccinations.fvr" /> Feline Viral Rhinotracheitis (Fvr)
-                  </label>
-                  <label >
-                    <input  type="checkbox" v-model="pet.vaccinations.fcv" /> Feline Calicivirus (Fcv)
-                  </label>
-                  <label >
-                    <input type="checkbox" v-model="pet.vaccinations.fp" /> Feline Panleukopenia (Fpv)
-                  </label>
-                </div>
-
-
-            
-                <label class="font-semibold pt-3">Medical Conditions</label>
-                <input v-model="pet.medicalConditions" type="text" class="border p-2 rounded w-full mb-2" />
-                
-                <label class="font-semibold">Special Needs</label>
-                <input v-model="pet.specialNeeds" type="text" class="border p-2 rounded w-full mb-2" />
-                
-                <div class=" pt-5 space-y-2 ">
-                <label class="font-semibold">Has this animal been sterilized?</label>
-                  <div class=" flex-row space-x-2">
-                  <strong >Non-surgical:</strong>
-                  <label >
-                    <input type="radio" v-model="pet.sterilization" value="Chemical Sterilization" /> Chemical Sterilization
-                  </label>
-                  <label >
-                    <input type="radio" v-model="pet.sterilization" value="Vasectomy" /> Vasectomy
-                  </label>
-                </div>
-                <div class="flex-row space-x-2">
-                  <strong class="font-semibold">Surgical:</strong>
-                  <label >
-                    <input type="radio" v-model="pet.sterilization" value="Neuter" /> Neuter
-                  </label>
-                </div>
-                  <div class=" flex-row space-x-3">
-                  <strong class="font-semibold">Others:</strong>
-                  <label >
-                    <input type="radio" v-model="pet.sterilization" value="Intact" /> Intact
-                  </label>
-                  <label >
-                    <input type="radio" v-model="pet.sterilization" value="Not Applicable" /> Not Applicable
-                  </label>
-                  <label >
-                    <input type="radio" v-model="pet.sterilization" value="Unknown" /> Unknown
-                  </label>
-                </div> 
-                <div class="pt-3">
-                <label class="font-semibold">Other Information</label>
-                <textarea v-model="pet.otherInfo" class="border p-2 rounded w-full mb-2" rows="4" placeholder="Tell me more about this Furry Animal"></textarea>
-                </div> 
-                </div>
-                <!-- Navigation Buttons -->
-                    <div class="flex justify-between mt-4">
-                  <button @click="goToStep(1)" class="bg-gray-300 text-gray-800 rounded px-4 py-2">Back</button>
-                  <button @click="saveChanges" class="bg-blue-500 text-white rounded px-4 py-2">Save Changes</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+          <PetProfileModal 
+            :isVisible="showModal" 
+            :isEditing="true" 
+            :pet="pet" 
+            @close="showModal = false" 
+            @update-pet="updatePet"
+          />
           <div class="grid grid-cols-3 mt-10 gap-5">
             <div>
               <div class="rounded-lg border bg-zinc-100 p-3">
@@ -328,24 +153,17 @@
 </template>
 
 <script>
+import PetProfileModal from '@/pages/Modal/PetProfileModal.vue';
+
 export default {
   name: "UserProfile",
+  components: {
+    PetProfileModal
+  },
   data() {
     return {
-      selectedTab: 'mga_iro', // Default selected tab
-      showModal: false, // State to control modal visibility
-      selectedFiles: [], // Initialize selectedFiles to an empty array
-      form: {
-        givenName: '',
-        petType: '',
-        breedMix: '',
-        ageGender: '',
-        size: '',
-        coatFur: '',
-        energyLevel: '',
-        about: '',
-        offers: false, // Checkbox state
-      },
+      selectedTab: 'mga_iro',
+      showModal: false,
       pet: {
         name: '',
         nickname: '',
@@ -358,7 +176,7 @@ export default {
         sizeWeight: '',
         energyLevel: '',
         status: '',
-        vaccinations: { // Initialize vaccinations object
+        vaccinations: {
           rabies: false,
           fvr: false,
           fcv: false,
@@ -369,7 +187,6 @@ export default {
         sterilization: '',
         otherInfo: '',
       },
-      currentStep: 1,
     };
   },
   methods: {
@@ -423,6 +240,12 @@ export default {
     },
     removeFile(index) {
       this.selectedFiles.splice(index, 1); // Remove the selected file
+    },
+    updatePet(updatedPet) {
+      this.pet = updatedPet; // Update the pet data with the new values from the modal
+    },
+    triggerFileInput() {
+      this.$refs.fileInput.click(); // Trigger file input click
     },
   },
 };
