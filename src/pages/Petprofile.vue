@@ -1,71 +1,265 @@
 <template>
-  <div class="bg-white p-6">
-    <div class="flex justify-between items-center mb-4">
-      <div class="flex space-x-2">
-        <h2 class="text-3xl font-bold">Dolens</h2>
-      </div>
-      <div>
-        <button class="bg-white hover:bg-gray-300 text-gray-800 rounded-xl border font-bold py-2 px-4 mr-2">
-          Edit
-        </button>
-        <button class="bg-white hover:bg-gray-300 text-gray-800 rounded-xl border font-bold py-2 px-4  mr-2">
-          Delete
-        </button>
-        <button class="bg-red-700 hover:bg-red-600 text-white rounded-xl font-bold py-2 px-4 rounded-r-md">
-          View as Public
-        </button>
+  <div class="bg-white p-6 rounded-lg">
+    <div class="doles flex justify-between items-center mb-4 space-x-4 sm:space-x-2">
+  <div class="flex space-x-2 sm:space-x-1">
+    <h2 class="font-bold text-[25px]">Dolens</h2>
+  </div>
+  <div class="flex space-x-2 sm:space-x-1">
+    <button 
+      @click="toggleEdit" 
+      class="bg-white hover:bg-gray-300 p-2 text-gray-800 rounded-lg border font-semibold py-1 px-3 ]"
+    >
+      Edit
+    </button>
+    <button 
+      @click="confirmDelete" 
+      class="bg-white hover:bg-gray-300 p-2 text-gray-800 rounded-lg border font-semibold py-1 px-3]"
+    >
+      Delete
+    </button>
+    <button 
+      @click="goToPetProfile" 
+      class="bg-pink-50 hover:bg-red-100 text-red-500 gap-2 p-3 rounded-lg font-semibold py-1 px-3]"
+    >
+      View as Public
+    </button>
+  </div>
+</div>
+
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-1 content-start bg-white rounded-lg">
+      <img 
+        v-for="(image, index) in pet.imageGallery.slice(0, 3)" 
+        :key="index" 
+        :src="image" 
+        alt="Pet Image" 
+        class="w-full h-32 md:h-48 object-fill cursor-pointer" 
+        @click="openPreview(index)" 
+      />
+      <div class="relative overflow-hidden">
+        <img v-for="(image, index) in pet.imageGallery.slice(0, 1)" :key="index" :src="image" alt="Pet Image" class="w-full h-32 md:h-48 object-fill"/>
+        <div v-if="pet.imageGallery.length > 4" class="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-contain">
+          <span class="text-white text-xl font-bold">+{{ pet.imageGallery.length - 4}}</span>
+        </div>
       </div>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 content-start ">
-      <img :src="require('@/assets/image/LUIGI-3-300x300.jpg')" alt="Socrates" class="w-full h-64 object-cover border rounded-2xl">
-      <img :src="require('@/assets/image/LUIGI-3-300x300.jpg')" alt="Socrates" class="w-full h-64 object-cover   border rounded-2xl">
-      <img :src="require('@/assets/image/LUIGI-3-300x300.jpg')" alt="Socrates" class="w-full h-64 object-cover border rounded-2xl">
-      <div class="relative">
-        <img :src="require('@/assets/image/dog-golden-retriever.webp')" alt="Socrates" class="w-full h-64 object-cover rounded-2xl">
-        <span class="absolute bottom-4 right-4 bg-gray-800 text-white font-bold py-2 px-4 rounded-full">+5</span>
-      </div>
-    </div>
-    <div class="flex flex-col md:flex-row space-x-0 md:space-x-3">
-      <div class="flex w-full">
-        <div class="mt-4 rounded-3xl border w-full ">
-          <div class="flex m-5 justify-between">
-            <p class="text-gray-700">Female | Senior</p>
-            <div>
-              <h3 class="text-lg font-bold mb-2">Additional Information</h3>
-              <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-200 dark:text-red-900">Poor Health</span>
-              <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Sprayed</span>
-              <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Available</span>
-            </div>
-          </div>
-          <p class="mt-2 m-5  text-gray-800 ">
-            Hi there, I'm Dolens! A mature and loyal mixedgjkdhskhdgcsghjxcgskhasdjhkcgaskcjhagskhjagsdckashdgaksdhjcakdhjkkhjsdkhjgsdkjh breed dog. Just to let you know, I am unfortunately in poor health, so you should be ready for associated costs. 
+
+    <div class="flex flex-col md:flex-row space-x-0 md:space-x-3 mt-4">
+      <div class="flex w-full mb-4 md:mb-0">
+        <div class="rounded-3xl border w-full p-5">
+          <h2 class="font-bold text-[25px]">Dolens</h2>
+          <p class="text-gray-700 pb-4 text-sm md:text-base">Female | Senior</p>
+          <p class="mt-2 text-gray-800 text-sm md:text-base">
+            Hi there, I'm Dolens! A mature and loyal mixed-breed dog. Just to let you know, I am unfortunately in poor health, so you should be ready for associated costs.
           </p>
         </div>
       </div>
-      <div class="mt-4 rounded-3xl border w-full">
-        <div class="m-5 space-y-5">
-          <h3 class="text-lg font-bold">Good with</h3>
-          <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-200 dark:text-red-900">Poor Health</span>
-          <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Sprayed</span>
-          <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Available</span>
 
-          <h3 class="text-lg font-bold">Bad with</h3>
-          <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-200 dark:text-red-900">Poor Health</span>
-          <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Sprayed</span>
-          <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Available</span>
+      <!-- Pet Owner and Other Details -->
+      <div class="grid grid-cols-2 rounded-3xl  border w-full p-5">
+        <p class="text-sm md:text-base"><strong>Owner Name:</strong> Eric</p>
+        <p class="text-sm md:text-base"><strong>Age:</strong> {{ pet.age }}</p>
+        <p class="text-sm md:text-base"><strong>Size:</strong> Medium</p>
+        <p class="text-sm md:text-base"><strong>Energy Level:</strong> Low</p>
+        <p class="text-sm md:text-base"><strong>Date Re-homed:</strong> {{ pet.dateReHommed }}</p>
+        <p class="text-sm md:text-base"><strong>Pet Type:</strong> Dog</p>
+        <p class="text-sm md:text-base"><strong>Breed/Mix:</strong> {{ pet.breed }}</p>
+        <p class="text-sm md:text-base"><strong>Coat/Fur:</strong> Short</p>
+      </div>
+    </div>
 
-          <div class="content-start">
-            <h3 class="text-lg font-bold">Temperaments</h3>
-            <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-200 dark:text-red-900">Poor Health</span>
-            <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Sprayed</span>
-            <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Available</span>
-            <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-200 dark:text-red-900">Poor Health</span>
-            <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Sprayed</span>
-            <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Available</span>
-            <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-200 dark:text-red-900">Poor Health</span>
-            <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Sprayed</span>
-            <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-200 dark:text-green-900">Available</span>
+    <!-- Health and Medical Information -->
+    <div class="flex w-full mt-4">
+      <div class="rounded-3xl border w-full p-5">
+        <h3 class="text-lg font-bold mb-2">Health and Medical</h3>
+        <div class="mb-2 text-sm md:text-base">
+          <strong>Vaccinations Status:</strong> Rabies, Feline Viral Rhinotracheitis (Fvr), Feline Calicivirus (Fcv), Rabies 2
+        </div>
+        <div class="mb-2 text-sm md:text-base">
+          <strong>Spay / Neuter:</strong> Neuter
+        </div>
+        <div class="mb-2 text-sm md:text-base">
+          <strong>Medical Conditions:</strong> None known
+        </div>
+        <div class="mb-2 text-sm md:text-base">
+          <strong>Special Needs:</strong> None
+        </div>
+      </div>
+    </div>
+
+    <!-- Editing Mode Modal -->
+    <div v-if="isEditing" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white max-w-[50rem] pb-10 pl-6 pr-6 first-line:w-full border-spacing-2 rounded-md h-[90vh]">
+        <h3 class="text-lg font-bold  text-center  p-5">Edit Pet Info</h3>
+      <div class="bg-white p-1 rounded-lg max-w-lg w-full h-[75vh] overflow-y-auto hide-scrollbar relative">
+        <!-- Image Carousel (Visible only in Step 1) -->
+        <div v-if="currentStep === 1" class="relative mb-4">
+          <img :src="pet.imageGallery[currentImageIndex]" alt="Pet Image" class="w-full h-64 object-cover rounded-lg" />
+          <button @click="prevImage" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-40 w-fit rounded-full flex items-center hover:bg-gray-100 hover:bg-opacity-50 text-gray-700 sm:hover:text-white  p-2">❮</button>
+          <button @click="nextImage" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-40 w-fit rounded-full flex items-center hover:bg-gray-100 hover:bg-opacity-50 text-gray-700 sm:hover:text-white  p-2">❯</button>
+          <button @click="deleteImage(currentImageIndex)" class="absolute top-1 right-1 bg-red-500 text-white rounded-[50%]  w-5 h-5  opacity-50 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-[8px]">✖</button>
+          
+          <!-- Add Photo Button -->
+          <button @click="triggerFileInput" class=" text-[10px] absolute bottom-2 left-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded">
+            Add a Photo
+          </button>
+          <input type="file" ref="fileInput" @change="onFileChange" accept="image/*" multiple class="hidden" />
+        </div>
+
+        <!-- Step 1: Pet Details Form -->
+        <div v-if="currentStep === 1" class="mb-4">
+          <label class="font-semibold">Name</label>
+          <input v-model="pet.name" type="text" class="border bold p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Nickname</label>
+          <input v-model="pet.nickname" type="text" class="border p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Date Re-homed</label>
+          <input v-model="pet.dateReHommed" type="date" class="border p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Pet Type</label>
+          <select v-model="pet.type" class="border p-2 rounded w-full mb-2">
+            <option value="Cat">Cat</option>
+            <option value="Dog">Dog</option>
+            <option value="Dog">Others</option>
+            <!-- Add more pet types as needed -->
+          </select>
+          
+          <label class="font-semibold">Breed / Mix</label>
+          <input v-model="pet.breed" type="text" class="border p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Gender</label>
+          <select v-model="pet.gender" class="border p-2 rounded w-full mb-2">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          
+          <label class="font-semibold">Coat / Fur</label>
+          <input v-model="pet.coat" type="text" class="border p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Age</label>
+          <input v-model="pet.age" type="number" class="border p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Size & Weight</label>
+          <input v-model="pet.sizeWeight" type="text" class="border p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Energy Level</label>
+          <select v-model="pet.energyLevel" class="border p-2 rounded w-full mb-2">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+          <div class="flex justify-between mt-4">
+          <button @click="closeModal" class="bg-gray-300 text-gray-800 rounded px-4 py-2">
+          Cancel
+        </button>
+            <button @click="nextStep" class="bg-blue-500 text-white rounded px-4 py-2">Next</button>
+        </div>
+        </div>
+        
+        <!-- Step 2: Health and Medical Form -->
+        <div v-if="currentStep === 2" class="mb-4">
+          <label class="font-semibold " >Vaccination Status</label>
+          <div class=" space-x-3 pb-4 ">
+            <label >
+              <input type="checkbox" v-model="pet.vaccinations.rabies" /> Rabies
+            </label>
+            <label >
+              <input type="checkbox" v-model="pet.vaccinations.fvr" /> Feline Viral Rhinotracheitis (Fvr)
+            </label>
+            <label >
+              <input  type="checkbox" v-model="pet.vaccinations.fcv" /> Feline Calicivirus (Fcv)
+            </label>
+            <label >
+              <input type="checkbox" v-model="pet.vaccinations.fp" /> Feline Panleukopenia (Fpv)
+            </label>
           </div>
+
+
+      
+          <label class="font-semibold pt-3">Medical Conditions</label>
+          <input v-model="pet.medicalConditions" type="text" class="border p-2 rounded w-full mb-2" />
+          
+          <label class="font-semibold">Special Needs</label>
+          <input v-model="pet.specialNeeds" type="text" class="border p-2 rounded w-full mb-2" />
+          
+          <div class=" pt-5 space-y-2 ">
+          <label class="font-semibold">Has this animal been sterilized?</label>
+            <div class=" flex-row space-x-2">
+            <strong >Non-surgical:</strong>
+            <label >
+              <input type="radio" v-model="pet.sterilization" value="Chemical Sterilization" /> Chemical Sterilization
+            </label>
+            <label >
+              <input type="radio" v-model="pet.sterilization" value="Vasectomy" /> Vasectomy
+            </label>
+          </div>
+          <div class="flex-row space-x-2">
+            <strong class="font-semibold">Surgical:</strong>
+            <label >
+              <input type="radio" v-model="pet.sterilization" value="Neuter" /> Neuter
+            </label>
+          </div>
+            <div class=" flex-row space-x-3">
+            <strong class="font-semibold">Others:</strong>
+            <label >
+              <input type="radio" v-model="pet.sterilization" value="Intact" /> Intact
+            </label>
+            <label >
+              <input type="radio" v-model="pet.sterilization" value="Not Applicable" /> Not Applicable
+            </label>
+            <label >
+              <input type="radio" v-model="pet.sterilization" value="Unknown" /> Unknown
+            </label>
+          </div> 
+          <div class="pt-3">
+          <label class="font-semibold">Other Information</label>
+          <textarea v-model="pet.otherInfo" class="border p-2 rounded w-full mb-2" rows="4" placeholder="Tell me more about this Furry Animal"></textarea>
+          </div> 
+          </div>
+
+
+        <div class="flex justify-between mt-4">
+            <button @click="prevStep" class="bg-gray-300 text-gray-800 rounded px-4 py-2">Back</button>
+            <button @click="submitChanges" class="bg-blue-500 text-white rounded px-4 py-2">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+  
+  <!-- Image Preview Modal -->
+    <div v-if="isPreviewing" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="p-6 rounded-lg max-w-lg w-full">
+        <button @click="closePreview" class="font-bold absolute top-2 right-2 text-gray-600 hover:text-gray-900 p-4 text-4xl">
+          &times; <!-- Close button (X) -->
+        </button>
+
+        <div class="mt-[3rem] sm:mx-[2rem] w-full flex justify-center">
+          <div class="flex justify-center">
+            <div class="relative md:rounded-l-2xl flex justify-center items-center">
+              <div class="absolute sm:-left-7 lg:-left-11 z-10 bg-white bg-opacity-40 w-fit rounded-full flex items-center hover:bg-gray-100 hover:bg-opacity-50">
+                <button @click="prevImage" class="sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-gray-700 sm:hover:text-white" :disabled="currentImageIndex === 0">❮</button>
+              </div>
+              <!-- Centering the div on the screen -->
+              <div class="flex sm:h-fit xl:h-[50rem] w-full justify-center">
+                <img :src="pet.imageGallery[currentImageIndex]" alt="Preview" class="flex-shrink-0 object-contain" />
+              </div>
+              <div class="absolute sm:-right-7 lg:-right-11 z-10 bg-white bg-opacity-40 w-fit rounded-full flex items-center hover:bg-gray-100 hover:bg-opacity-50">
+                <button @click="nextImage" class="sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-gray-700 sm:hover:text-white" :disabled="currentImageIndex === pet.imageGallery.length - 1">❯</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+        <h3 class="text-lg font-bold text-center mb-4">Are you sure you want to delete this profile?</h3>
+        <div class="flex justify-between">
+          <button @click="deletePet" class="bg-red-500 text-white rounded px-4 py-2">Yes</button>
+          <button @click="showModal = false" class="bg-gray-300 text-gray-800 rounded px-4 py-2">No</button>
         </div>
       </div>
     </div>
@@ -77,35 +271,176 @@ export default {
   name: 'PetProfilePage',
   data() {
     return {
+      isEditing: false, // Track if in edit mode
+      currentImageIndex: 0,
+      currentStep: 1, // Track the current step
       pet: {
-        name: 'Socates',
-        age: 'Senior',
-        gender: 'Female',
-        breed: 'Mixed Breed Dog',
-        imageMain: 'https://example.com/main-image.jpg',
+        name: '',
+        description: "Hi there, I'm Dolens! A mature and loyal mixed-breed dog...",
+        imageMain: '', // Main image for the pet
         imageGallery: [
-          'https://example.com/image1.jpg',
-          'https://example.com/image2.jpg',
-          'https://example.com/image3.jpg',
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/dog-golden-retriever.webp'),
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/dog-golden-retriever.webp'),
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/dog-golden-retriever.webp'),
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/LUIGI-3-300x300.jpg'),
+        require('@/assets/image/dog-golden-retriever.webp'),
+        
         ],
-        description: "Hi there, I'm Socates! A mature and loyal mixed-breed dog...",
-        goodWith: ['Dogs', 'Cats', 'Other Pets'],
-        badWith: ['Active Lifestyle', 'First-time Owners'],
-        temperaments: [
-          { type: 'Affectionate', level: 'Affectionate' },
-          { type: 'Aggressive', level: 'Aggressive' },
-        ],
+        age: 'Senior',
+        dateReHommed: '',
+        gender: '',
+        breed: '',
+        vaccinations: {
+          rabies: false,
+          fvr: false,
+          fcv: false,
+        },
+        otherVaccines: '',
+        medicalConditions: '',
+        specialNeeds: '',
+        sterilization: '',
+        otherInfo: '',
       },
+      showModal: false, // Track if the modal is visible
+      payment: {
+        name: '',
+        expiryMonth: '',
+        expiryYear: '',
+        cvv: '',
+        cardNumber: '',
+        email: '',
+        streetAddress: '',
+        city: '',
+        state: '',
+        country: 'Estonia',
+      },
+      isPreviewing: false, // Track if the preview modal is visible
     };
+  },
+  methods: {
+    toggleEdit() {
+      this.isEditing = !this.isEditing;
+      if (this.isEditing) {
+        document.body.classList.add('overflow-hidden'); // Disable body scroll
+      } else {
+        document.body.classList.remove('overflow-hidden'); // Enable body scroll
+      }
+    },
+    saveChanges() {
+      this.isEditing = false;
+      // Logic to save changes, e.g., update API or local state
+    },
+    onFileChange(event) {
+      const files = event.target.files;
+      if (files.length) {
+        Array.from(files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.pet.imageGallery.push(e.target.result); // Add the uploaded image to the image gallery
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    },
+    confirmDelete() {
+      this.showModal = true; // Show the confirmation modal
+    },
+    deletePet() {
+      // Logic to delete the pet, e.g., API call
+      this.showModal = false; // Hide the modal after deletion
+    },
+    nextImage() {
+      if (this.currentImageIndex < this.pet.imageGallery.length - 1) {
+        this.currentImageIndex++;
+      } else {
+        this.currentImageIndex = 0; // Loop back to the first image
+      }
+    },
+    prevImage() {
+      if (this.currentImageIndex > 0) {
+        this.currentImageIndex--;
+      } else {
+        this.currentImageIndex = this.pet.imageGallery.length - 1; // Loop back to the last image
+      }
+    },
+    goToStep(step) {
+      this.currentStep = step; // Change the current step
+      if (step === 1) {
+        document.body.classList.remove('overflow-hidden'); // Enable body scroll
+      } else {
+        document.body.classList.add('overflow-hidden'); // Disable body scroll
+      }
+    },
+    closeModal() {
+      this.isEditing = false; // Close the modal
+      document.body.classList.remove('overflow-hidden'); // Enable body scroll when modal is closed
+    },
+    openPreview(index) {
+      console.log("Opening preview for image index:", index); // Debugging log
+      this.currentImageIndex = index; // Set the current image index
+      this.isPreviewing = true; // Show the preview modal
+    },
+    closePreview() {
+      this.isPreviewing = false; // Hide the preview modal
+    },
+    deleteImage(index) {
+      this.pet.imageGallery.splice(index, 1); // Remove the image at the specified index
+      if (this.currentImageIndex >= this.pet.imageGallery.length) {
+        this.currentImageIndex = this.pet.imageGallery.length - 1; // Adjust current index if needed
+      }
+    },
+    triggerFileInput() {
+      this.$refs.fileInput.click(); // Use this.$refs to access the file input
+    },
+    nextStep() {
+      this.currentStep = 2; // Move to step 2
+    },
+    prevStep() {
+      if (this.currentStep > 1) {
+        this.currentStep--; // Move to the previous step
+      }
+    },
+    
+  },
+  watch: {
+    isEditing(newValue) {
+      if (newValue) {
+        document.body.classList.add('overflow-hidden'); // Disable body scroll when modal is opened
+      } else {
+        document.body.classList.remove('overflow-hidden'); // Enable body scroll when modal is closed
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Add any specific custom styles here if needed */
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr; /* Stack images on small screens */
+@media (max-width: 292px) {
+  /* Mobile styles */
+  .doles {
+    flex-direction: column; /* Stack buttons vertically */
   }
+  .grid-cols-2 {
+    grid-template-columns: 1fr; /* Single column on mobile */
+  }
+  .h-40 {
+    height: auto; /* Adjust height for smaller screens */
+  }
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
 }
 </style>

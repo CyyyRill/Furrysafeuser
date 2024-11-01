@@ -10,7 +10,7 @@ import loginshel from '../pages/login_shelter.vue';
 import Profile from '../pages/Profile.vue';
 import petProfile from '../pages/Petprofile.vue';
 import Timeline from '../pages/Timeline.vue';
-// import Message from "../pages/Message.vue";
+import Message from "../pages/Messages.vue";
 
 const routes = [
     {
@@ -65,11 +65,11 @@ const routes = [
         path: '/petprofile',
         component: petProfile
     },
- //   {
-  //     name: 'message',
-  //      path: '/message',
-  //      component: Message
-  //  },
+   {
+       name: 'message',
+        path: '/message',
+        component: Message
+    },
     
 ];
 
