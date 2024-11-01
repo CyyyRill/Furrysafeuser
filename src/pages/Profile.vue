@@ -72,8 +72,9 @@
           <button @click="showModal = true" class="mb-4 px-4 py-2 bg-blue-950 text-white rounded-lg">Create Pet Profile</button>
 
           <PetProfileModal 
+            v-if="showModal" 
             :isVisible="showModal" 
-            :isEditing="true" 
+            :isEditing="false" 
             :pet="pet" 
             @close="showModal = false" 
             @update-pet="updatePet"

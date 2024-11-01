@@ -201,17 +201,26 @@
 export default {
   name: 'PetProfileedit',
   props: {
-    isVisible: Boolean,
-    isEditing: Boolean,
+    isVisible: {
+      type: Boolean,
+      required: true,
+    },
+    isEditing: {
+      type: Boolean,
+      required: true,
+    },
     pet: {
       type: Object,
-      required: true
-    }
+      default: () => ({}),
+    },
   },
   data() {
     return {
       currentImageIndex: 0,
-      localPet: { ...this.pet },
+      localPet: {
+        ...this.pet,
+        imageGallery: this.pet.imageGallery || [],
+      },
       currentStep: 1,
       dragOver: false,
       dogBreeds: ['Labrador Retriever', 'Golden Retriever', 'Bulldog', 'German Shepherd', 'Pit bull', 'Beagle', 'Rottweiler', 'Boxer', 'Dachshund', 'Yorkshire Terrier', 'Maltese', 'Chihuahua', 'Poodle', 'Shih Tzu', 'Mixed breed'],
@@ -283,6 +292,26 @@ export default {
     },
     updateSelectedValue(value) {
       this.selectedValue = value;
+    },
+    handleDrop(event) {
+        event.preventDefault(); // Prevent default behavior
+        const files = event.dataTransfer.files;
+        if (files.length) {
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.localPet.imageGallery.push(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    },
+    handleDragOver(event) {
+        event.preventDefault(); // Prevent default behavior
+        this.dragOver = true; // Indicate that an item is being dragged over
+    },
+    handleDragLeave() {
+        this.dragOver = false; // Reset drag over state
     },
   },
   watch: {
