@@ -4,9 +4,9 @@ import dashboard from '../pages/master/dashboard.vue';
 import home from '../pages/home.vue';
 import explore from '../pages/Explore.vue';
 import login from '../pages/login.vue';
-import Regis from '../pages/registration.vue';
+import Regis from '../pages/Regis.vue';
 import upload from '../pages/upload.vue';
-import loginshel from '../pages/login_shelter.vue';
+import Regisshel from '../pages/Regisshel.vue';
 import Profile from '../pages/Profile.vue';
 import petProfile from '../pages/Petprofile.vue';
 import Timeline from '../pages/Timeline.vue';
@@ -46,9 +46,9 @@ const routes = [
         component: upload
     },
     {
-        name: 'loginshel',
-        path: '/loginshel',
-        component: loginshel
+        name: 'Regisshel',
+        path: '/Regisshel',
+        component: Regisshel
     } ,
     {
         name: 'profile',
